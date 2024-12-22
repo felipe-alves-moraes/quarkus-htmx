@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+  <title></title>
+  <meta name="htmx-config" content='\{"timeout": 1000\}"'>
+  <link rel="stylesheet" href="/webjars/bootstrap/dist/css/bootstrap.min.css"/>
+</head>
+<body hx-headers='{"{inject:csrf.headerName}":"{inject:csrf.token}"}'>
+<main>
+    {#insert}No body!{/}
+</main>
+<script src="/webjars/htmx.org/dist/htmx.min.js"></script>
+<script defer src="/webjars/bootstrap/dist/js/bootstrap.min.js"></script>
+</body>
+</html>

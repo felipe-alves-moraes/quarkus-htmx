@@ -1,0 +1,13 @@
+{#include main.html}
+    <h1 class="text-base font-semibold leading-6 text-gray-900">
+        {contact.givenName} {contact.familyName}
+    </h1>
+    <div>
+    </div>
+    <div>Phone: <span>{contact.phone}</span></div>
+    <div>Email: <span>{contact.email}</span></div>
+    <div class="flex items-center gap-4 mt-4">
+        <a href="/contacts/{contact.id.value}/edit" class="button-primary">Edit</a>
+        <a href="/contacts" class="button-secondary">Back</a>
+    </div>
+{/include}

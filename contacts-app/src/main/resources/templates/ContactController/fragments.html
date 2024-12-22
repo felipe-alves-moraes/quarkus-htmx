@@ -1,0 +1,124 @@
+{#fragment id = textInput}
+<div>
+    <label for="{fieldName}" class="block text-sm font-medium leading-6 text-gray-900">
+        {labelText}
+    </label>
+    <div class="relative mt-2 rounded-md shadow-sm">
+        <input id="{fieldName}"
+               type="text"
+               name="{fieldName}"
+               value="{fieldValue}"
+               class="block w-full rounded-md border-0 py-1.5 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ring-1 ring-inset"
+                {!th:classappend="${#fields.hasErrors('__${fieldName}__')?'ring-red-300 focus:border-red-300 focus:ring-red-500':'ring-gray-300 focus:ring-gray-500 focus:border-gray-500'}"!}
+        >
+
+        {#ifError fieldName}
+        <div id="{fieldName + '-error-icon'}"
+             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                      clip-rule="evenodd"/>
+            </svg>
+        </div>
+        {/ifError}
+    </div>
+    {#ifError fieldName}
+    <p {!th:classappend="${#fields.hasErrors('__${fieldName}__')?'':'hidden'}"!}
+            id="{fieldName + '-error'}"
+            class="mt-2 text-sm text-red-600">
+        {#error fieldName/}
+    </p>
+    {/ifError}
+</div>
+{/fragment}
+
+{#fragment id = contactsTable}
+<tbody class="divide-y divide-gray-200">
+{#for contact in contacts}
+<tr>
+    <td class="table-value-first-column">{contact.givenName} {contact.familyName}</td>
+    <td class="table-value">{contact.phone}</td>
+    <td class="table-value">{contact.email}</td>
+    <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-0 flex gap-x-2">
+        <a class="text-indigo-400 hover:text-indigo-900"
+           href="/contacts/{contact.id.value}/edit">Edit</a>
+        <a class="text-indigo-400 hover:text-indigo-900"
+           href="/contacts/{contact.id.value}">View</a>
+        <a class="text-indigo-400 hover:text-indigo-900"
+           href="#"
+           hx-delete="/contacts/{contact.id.value}"
+           hx-confirm="Are you sure you want to delete the contact {contact.givenName} {contact.familyName}?"
+           hx-swap="outerHTML swap:1s"
+           hx-target="closest tr"
+        >
+            Delete
+        </a>
+    </td>
+</tr>
+{/for}
+{#let nextPage = (page + 1)}
+{#let nextPageSize=nextPage.multiply(size)}
+{#if nextPageSize < totalElements}
+<tr>
+    <td colspan="4">
+        <div class="flex justify-center mt-4">
+                                <span class="button-secondary w-32 text-center"
+                                      hx-get="/contacts?page={nextPage}&q{query}"
+                                      hx-trigger="revealed"
+                                      hx-select="tbody > tr"
+                                      hx-target="closest tr"
+                                      hx-swap="outerHTML"
+                                >
+                                </span>
+        </div>
+    </td>
+</tr>
+{/if}
+{/let}
+{/let}
+</tbody>
+{/fragment}
+
+{#fragment id = emailInput}
+
+<div id="{fieldName}-form-element"
+     x-data="\{showErrorIcon: {#if inject:validation.hasError(fieldName)}true{#else}false{/if} \}"
+     x-on:htmx:after-settle="showErrorIcon = !document.getElementById('{fieldName}-error').classList.contains('hidden')"
+>
+    <label for="{fieldName}" class="block text-sm font-medium leading-6 text-gray-900">
+        {labelText}
+    </label>
+    <div class="relative mt-2 rounded-md shadow-sm">
+        <input id="{fieldName}"
+               type="email"
+               name="{fieldName}"
+               value="{fieldValue}"
+               hx-trigger="{inlineValidationUrl ? 'keyup changed delay:200ms' : 'null'}"
+               hx-post="{inlineValidationUrl ?: 'null'}"
+               hx-select="#{fieldName}-error"
+               hx-target="#{fieldName}-error"
+               hx-swap="outerHTML"
+               hx-include="closest form"
+               hx-validate="{#if inlineValidationUrl??}true{#else}false{/if}"
+               class="block w-full rounded-md border-0 py-1.5 focus:ring-2 focus:ring-inset sm:text-sm sm:leading-6 ring-1 ring-inset {#if inject:validation.hasError(fieldName)}ring-red-300 focus:border-red-300 focus:ring-red-500{#else}ring-gray-300 focus:ring-gray-500 focus:border-gray-500{/if}"
+        >
+
+        <div x-show="showErrorIcon === true"
+             id="{fieldName}-error-icon'"
+             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+            <svg class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                <path fill-rule="evenodd"
+                      d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z"
+                      clip-rule="evenodd"/>
+            </svg>
+        </div>
+    </div>
+
+    <p id="{fieldName}-error"
+       class="mt-2 text-sm text-red-600 {#if inject:validation.hasError(fieldName)}{#else}hidden{/if}">
+        {#error fieldName/}
+    </p>
+
+</div>
+{/fragment}

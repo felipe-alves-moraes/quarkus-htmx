@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+    {!<meta name="htmx-config" content='\{"timeout": 2000\}'>!}
+  <title></title>
+  <link rel="stylesheet" href="/style.css"/>
+  <link rel="stylesheet" href="/webjars/shoelace-style__shoelace/dist/themes/light.css"/>
+
+</head>
+<body hx-headers='{"{inject:csrf.headerName}":"{inject:csrf.token}"}'>
+<div class="container mx-auto max-w-2xl m-4">
+  <main>
+      {#insert}No body!{/}
+  </main>
+</div>
+<script src="/webjars/htmx.org/2.0.0/dist/htmx.js"></script>
+<script type="module" src="/webjars/shoelace-style__shoelace/cdn/shoelace-autoloader.js"></script>
+</body>
+</html>

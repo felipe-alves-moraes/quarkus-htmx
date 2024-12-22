@@ -1,0 +1,48 @@
+{#include main.html}
+    <div class="sm:flex sm:items-center mb-4">
+        <div class="sm:flex-auto">
+            <h1 class="text-base font-semibold leading-6 text-gray-900">
+                {#when editMode}
+                  {#is CREATE}
+                    <span>New contact</span>
+                  {#is UPDATE}
+                    <span>Update contact</span>
+                {/when}
+            </h1>
+            <p class="mt-2 text-sm text-gray-700">
+            {#when editMode}
+                  {#is CREATE}
+                    <span>Add a new contact to your list of contacts.</span>
+                  {#is UPDATE}
+                    <span>Update a new contact from your list of contacts.</span>
+                {/when}
+
+            </p>
+        </div>
+    </div>
+    <form action="{editMode.name.equals('CREATE') ? '/contacts/new' : str:format('/contacts/%s/edit',formData.id) }" method="post" class="flex flex-col gap-y-2">
+        <input type="hidden" name="{inject:csrf.parameterName}" value="{inject:csrf.token}"/>
+        {#include ContactController/fragments$textInput fieldName='givenName' labelText='Given Name' fieldValue=formData.givenName /}
+        {#include ContactController/fragments$textInput fieldName='familyName' labelText='Family Name' fieldValue=formData.familyName /}
+        {#include ContactController/fragments$textInput fieldName='phone' labelText='Phone' fieldValue=formData.phone /}
+        {#include ContactController/fragments$emailInput fieldName='email' labelText='Email' fieldValue=formData.email inlineValidationUrl='/contacts/validate'/}
+        <button type="submit" class="button-primary mt-4">Save</button>
+    </form>
+
+    <div class="flex mt-8 gap-4">
+    {#if editMode.name.equals('UPDATE')}
+        <button type="submit" class="button-primary-danger"
+            id="delete-button"
+            hx-confirm="Are you sure you want to delete the contact {formData.givenName} {formData.familyName}"
+            hx-delete="/contacts/{formData.id}"
+            hx-target="body"
+            hx-push-url="true"
+        >
+          Delete Contact
+        </button>
+    {/if}
+    <p>
+        <a href="/contacts" class="button-secondary">Back</a>
+    </p>
+    </div>
+{/include}

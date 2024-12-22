@@ -1,0 +1,72 @@
+{#include main.html}
+    <div>
+        <div class="sm:flex sm:items-center mb-4">
+            <div class="sm:flex-auto">
+                <h1 class="text-base font-semibold leading-6 text-gray-900">Contacts</h1>
+                <p class="mt-2 text-sm text-gray-700">A list of all your contacts.</p>
+            </div>
+            <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                <a href="/contacts/new"
+                   class="button-primary">
+                    Add Contact
+                </a>
+            </div>
+        </div>
+        <div class="flex gap-x-2 items-center">
+            <form action="/contacts" method="get">
+                <label for="search" class="text-sm font-medium leading-6 text-gray-900">Search</label>
+                <input type="search" name="q" id="search" value="{query}"
+                       hx-get="/contacts"
+                       hx-trigger="search, keyup delay:200ms changed"
+                       hx-target="tbody"
+                       hx-swap="outerHTML"
+                       hx-push-url="true"
+                       hx-indicator="#spinner"
+                       class="rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                >
+                <button type="submit"
+                        class="text-indigo-400 hover:text-indigo-900">Search
+                </button>
+            </form>
+            <svg id="spinner"
+                 class="htmx-indicator animate-spin ml-3 mr-3 h-5 w-5 text-black"
+                 xmlns="http://www.w3.org/2000/svg"
+                 fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10"
+                        stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+        </div>
+        <div class="mt-4 flex">
+            <div id="archive-ui" hx-target="this" hx-swap="outerHTML" class="h-8 w-80">
+                <button hx-post="/contacts/archives" class="button-secondary">
+                    Download archive
+                </button>
+            </div>
+        </div>
+        <div class="mt-8 flow-root">
+            <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                <div class="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
+                    <table class="min-w-full divide-y divide-gray-300">
+                        <thead>
+                        <tr>
+                            <th scope="col" class="table-header-first-column">Name
+                            </th>
+                            <th scope="col" class="table-header">
+                                Phone
+                            </th>
+                            <th scope="col" class="table-header">
+                                Email
+                            </th>
+                            <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-0">
+                                <span class="sr-only">Edit or View</span>
+                            </th>
+                        </tr>
+                        </thead>
+                        {#include ContactController/fragments$contactsTable contacts=contacts page=page query=query size=size totalElements=totalElements /}
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+{/include}

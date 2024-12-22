@@ -1,0 +1,27 @@
+{#fragment id = todoItem}
+    <li class="{item.completed ? 'checked' : ''}" id="list-item-{item.id}">
+        <div class="view">
+            <input id="toggle-checkbox-{item.id}" class="toggle" type="checkbox"
+                    {item.completed ? 'checked' : ''}
+                   hx-put="/todo/{item.id}/toggle"
+                   hx-target="#list-item-{item.id}"
+                   hx-trigger="click"
+                   hx-swap="outerHTML">
+            <label title="{item.title}">{item.title}</label>
+            <button class="destroy"
+                    hx-delete="/todo/{item.id}"
+                    hx-target="#list-item-{item.id}"
+                    hx-trigger="click"
+                    hx-swap="outerHTML"
+            ></button>
+        </div>
+    </li>
+{/fragment}
+
+{#fragment id = activeItemCount}
+    <span hx-get="/todo/active-items-count"
+          hx-swap="outerHTML"
+          hx-trigger="itemAdded from:body, itemCompletionToggle from:body, itemDeleted from:body">
+            <span class="todo-count"><strong>{numberOfActiveItems}</strong> items left</span>
+    </span>
+{/fragment}

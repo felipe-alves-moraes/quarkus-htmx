@@ -1,0 +1,32 @@
+{#fragment id = tree}
+    GitHub Repositories
+    {#for repository in repositories}
+        <sl-tree-item lazy
+                      hx-trigger="sl-lazy-load consume"
+                      hx-get="/repositories/{repository}/releases"
+        >
+            <span>{repository}</span>
+        </sl-tree-item>
+    {/for}
+{/fragment}
+
+{#fragment id = releases}
+    <span>{repositoryName}</span>
+    {#if releases.empty}
+        <sl-tree-item disabled>
+            No releases found
+        </sl-tree-item>
+    {/if}
+    {#for release in releases}
+        <sl-tree-item hx-target="#release-notes-container"
+                      hx-indicator="#release-notes-loading-indicator"
+                      hx-get="/repositories/{repositoryName}/releases/{release.id}"
+        >
+            <span>{release.name}</span>
+        </sl-tree-item>
+    {/for}
+{/fragment}
+
+{#fragment id = releaseBody}
+    {releaseBody.raw}
+{/fragment}
